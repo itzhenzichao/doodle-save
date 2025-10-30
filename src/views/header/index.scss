@@ -1,0 +1,62 @@
+.graffiti {
+      position: relative;
+      font-size: 140px;
+      font-weight: 900;
+      /* 无绿色渐变：红、橙、黄、深蓝、紫、黑 混色 */
+      background: linear-gradient(
+        120deg,
+        #ff4d4d 0%,    /* 亮红 */
+        #ff9900 20%,   /* 橙黄 */
+        #fff350 35%,   /* 亮黄 */
+        #1a365d 50%,   /* 深蓝 */
+        #6a0dad 70%,   /* 深紫 */
+        #1a1a1a 90%    /* 近黑 */
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      
+      /* 强化阴影：黑色阴影增加厚重感，亮边模拟油漆反光 */
+      text-shadow: 
+        3px 3px 5px rgba(0,0,0,0.4),  /* 深色阴影 */
+        -1px -1px 2px rgba(255,255,255,0.2); /* 轻微亮边 */
+      
+      /* 随机倾斜角度，更显随性 */
+      transform: rotate(1deg) skewX(-3deg);
+      
+      /* 粗粝噪点纹理，模拟油漆颗粒感 */
+      background-image: 
+        linear-gradient(120deg, #ff4d4d 0%, #ff9900 20%, #fff350 35%, #1a365d 50%, #6a0dad 70%, #1a1a1a 90%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+      background-blend-mode: overlay;
+    }
+
+    /* 油漆滴落效果：带深色渐变，呼应主色调 */
+    .graffiti::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 50px;
+      background: linear-gradient(to bottom, #6a0dad 20%, #1a1a1a 80%);
+      border-radius: 0 0 10px 10px;
+      transform: rotate(-3deg) translateY(5px);
+      top: 100px;
+      left: 310px;
+      box-shadow: 2px 3px 4px rgba(0,0,0,0.2);
+      opacity: 0.9;
+    }
+
+    /* 额外泼溅装饰：增强涂鸦随机性 */
+    .graffiti::before {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 30px;
+      background: #ff4d4d;
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      transform: rotate(20deg) translate(-20px, 10px);
+      top: 40px;
+      left: 120px;
+      box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+      opacity: 0.8;
+    }

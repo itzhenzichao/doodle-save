@@ -1,0 +1,28 @@
+.toolbar-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px;
+    margin: auto;
+    .toolbar-icon-container {
+        width: 61px;
+        height: 56px;
+        border-radius: 8px;
+        text-align: center;
+        padding: 10px 0px;
+        margin: auto;
+        margin-bottom: 10px;
+        cursor: pointer;
+        .toolbar-icon {
+            font-size: 21px;
+            color: black;
+        }
+        .toolbar-icon-label {
+            font-size: 12px;
+            color: black;
+            margin-top: 5px;
+        }
+        &:hover {
+            background-color: rgba(237, 242, 247, 1);
+        }
+    }
+}
