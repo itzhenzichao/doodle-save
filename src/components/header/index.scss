@@ -1,0 +1,20 @@
+.header-content {
+  border-bottom: 1px solid #ebedf2;
+  height: 54px;
+  padding: 0px 10px;
+  background-color: #f0a314e0;
+  .header {
+      display: flex;
+      line-height: 54px;
+      align-items: center;
+      padding-left: 12px;
+      .header-logo {
+        border-radius: 50%;
+      }
+      .header-title {
+        margin-left: 10px;
+        font-weight: 800;
+        color: white;
+      }
+  }
+}

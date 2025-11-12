@@ -3,4 +3,5 @@ export const layoutStyle = {
   overflow: 'hidden',
   width: 'calc(100%)',
   maxWidth: 'calc(100%)',
+  height: '100vh',
 };

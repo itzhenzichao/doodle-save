@@ -123,3 +123,15 @@ src/
        }
      })
      ``` -->
+<!-- import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '@/store';
+import { init } from '@/store/slices/canvas';
+    const dispatch = useDispatch<AppDispatch>();
+    dispatch(init(null)); -->
+<!-- 
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from '@/store';
+
+
+
+

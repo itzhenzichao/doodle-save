@@ -10,5 +10,5 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}> {/* 关键：注入 store */}
     <App />
     </Provider>
-  </StrictMode>,
+  </StrictMode>
 )

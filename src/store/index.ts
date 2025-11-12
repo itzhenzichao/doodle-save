@@ -1,6 +1,6 @@
 // store/index.ts
 import { configureStore } from '@reduxjs/toolkit';
-import canvasReducer from './canvas';
+import canvasReducer from './slices/canvas';
 
 export const store = configureStore({
   reducer: {
