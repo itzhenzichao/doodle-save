@@ -1,0 +1,81 @@
+标题：doodle-save 项目优化计划（V1）
+
+一、目标
+1. 提升基础绘图体验（导出、撤销重做、自动保存、缩放体验）。
+2. 改善用户交互与健壮性（错误提示、快捷键、清晰的工具栏结构）。
+3. 为后续功能扩展打好基础（模块化 Canvas 管理、服务化导出与存储、命令模式）。
+
+二、当前状态（简要）
+1. 使用 fabric.js 初始化画布，通过 URL 参数设置宽高。
+2. 工具栏包含：画笔、添加文字、清除画布。
+3. 画布缩放通过 scale 参数控制（UI 有选择器）。
+4. 存在问题：
+   - 错误提示使用 window.msg.error，需替换为 antd message.error。
+   - 无导出功能（PNG/SVG）。
+   - 无撤销/重做与自动保存。
+   - 清除画布按钮图标与语义不完全匹配。
+
+三、近期优化清单（M1）
+1. 导出功能
+   - 在工具栏新增“导出”按钮，支持导出 PNG 和 SVG。
+   - 使用 fabric.Canvas 的 toDataURL（PNG）与 toSVG（SVG）。
+   - 通过隐式 a 标签触发文件下载，默认命名包含时间戳。
+
+2. 错误提示修复
+   - 将 App.tsx 中的 window.msg.error 替换为 message.error。
+
+3. 撤销/重做（基础版）
+   - 使用快照栈（JSON 序列化）存储状态，提供 undo/redo。
+   - 在对象添加、修改后入栈；清除画布也入栈。
+
+4. 自动保存（本地）
+   - 定时或事件驱动将画布 JSON 保存到 localStorage。
+   - 提供“恢复最近一次草稿”入口。
+
+5. 快捷键
+   - 支持 Ctrl/Cmd+Z（撤销）、Shift+Ctrl/Cmd+Z（重做）、Ctrl/Cmd+S（保存）。
+
+四、中期优化（M2）
+1. 导出增强：导出尺寸与背景控制、透明背景、选区导出。
+2. 性能：节流刷子绘制事件、虚拟列表式图层面板（预留未来）。
+3. UI：工具栏分组、图标语义统一（清除画布使用 Delete/Rest 风格）。
+
+五、长期规划（M3）
+1. 模块化 CanvasProvider，提供统一的命令总线与事件总线。
+2. 存储服务接入 IndexedDB（大图场景）或后端接口。
+3. 移动端适配与触控交互优化。
+
+六、技术方案摘要
+1. 导出服务（utils/services/export.ts）
+   - exportPNG(canvas, opts): 使用 toDataURL；支持质量、缩放、背景控制。
+   - exportSVG(canvas): 使用 toSVG；文本、形状按 fabric 输出。
+
+2. 历史栈（撤销/重做）
+   - 结构：past[], present, future[]。
+   - 入栈：在 add/remove/modify/render 后记录 canvas.toJSON()。
+   - 操作：undo() 取 past 栈顶；redo() 取 future 栈顶；应用 loadFromJSON。
+
+3. 自动保存
+   - saveDraft(): localStorage.setItem('doodle_draft', canvas.toJSON())。
+   - restoreDraft(): 从 localStorage 读取并 loadFromJSON。
+
+七、实施计划（里程碑）
+M1（本次）：导出 + 错误提示修复 + 预览验证。
+M2：撤销/重做 + 自动保存 + 快捷键。
+M3：CanvasProvider 拆分与数据持久化升级。
+
+八、测试与验证
+1. 单点验证：导出按钮在空画布与有内容时均可用；PNG/SVG 打开正常。
+2. UI 验证：在 IDE 预览中检查工具栏显示与点击反馈。
+3. 回归：清除画布后仍可导出空白图；缩放不影响导出尺寸（按实际画布尺寸导出）。
+
+九、风险与规避
+1. 大图导出可能阻塞主线程：使用异步与质量参数控制，后续考虑 Web Worker。
+2. SVG 兼容性：复杂滤镜可能不完全支持；后续可提供 rasterize 选项。
+
+十、后续工作
+1. 需求确认：是否需要导出 PDF、WebP；是否需要图层面板与形状库。
+2. 接口对接：若需服务端存储，定义后端 API。
+
+结束语
+本计划旨在快速增强 doodle-save 的可用性与可扩展性。优先完成导出与基础交互优化，其余按里程碑推进。
