@@ -37,6 +37,7 @@ const Toolbar = () => {
     if (!canvas) return;
     const item = toolbarItems.find((item) => item.action === action);
     if (!item) return;
+    setToolbarType('');
     if (item.action === 'brush') {
       const isopen = toolbarType === 'brush';
       if (isopen) {
