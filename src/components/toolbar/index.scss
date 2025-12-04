@@ -3,6 +3,28 @@
     flex-direction: column;
     padding: 10px 0px;
     margin: auto;
+    max-height: calc(100vh - 54px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+
+    // 自定义滚动条样式（Webkit浏览器）
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 3px;
+        
+        &:hover {
+            background-color: #999;
+        }
+    }
     .toolbar-icon-container {
         width: 61px;
         border-radius: 8px;
@@ -22,7 +44,8 @@
             margin-top: 5px;
         }
         &:hover {
-            background-color: rgba(237, 242, 247, 1);
+            background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+            transform: translateY(0px) scale(1.08);
         }
     }
     .active {

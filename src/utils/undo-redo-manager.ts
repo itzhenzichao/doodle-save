@@ -305,45 +305,35 @@ class UndoRedoManager {
     // 监听对象修改前事件（鼠标按下时）
     this.canvas.on('mouse:down', (e) => {
       if (e.target && !this._isUndoRedoOperation) {
-        console.log('Mouse down on object:', e.target.type, e.target);
         // 保存操作前的状态
         const previousState = this._captureCurrentState(e.target);
         this.objectStates.set(e.target, previousState);
-        console.log('Saved previous state for mouse down');
       }
     });
 
     // 监听文字编辑开始事件
     this.canvas.on('text:editing:entered', (e) => {
       if (e.target && !this._isUndoRedoOperation) {
-        console.log('Text editing entered:', e.target);
         // 保存编辑前的状态
         const previousState = this._captureCurrentState(e.target);
         this.objectStates.set(e.target, previousState);
-        console.log('Saved previous state for text editing');
       }
     });
 
     // 监听对象修改
     this.canvas.on('object:modified', (e) => {
-      console.log('Object modified:', e.target?.type, e.target);
       // 避免在撤销/重做操作时重复记录
       if (e.target && !this._isUndoRedoOperation) {
         const previousState = this.objectStates.get(e.target);
         const currentState = this._captureCurrentState(e.target);
         
-        console.log('Previous state exists:', !!previousState);
-        console.log('Current state:', currentState);
-        
         // 如果没有保存的前置状态，说明不是通过鼠标操作触发的修改，跳过
         if (!previousState) {
-          console.log('No previous state found, skipping');
           return;
         }
         
         const command = new ModifyObjectCommand(this.canvas!, e.target, previousState, currentState);
         this.undoStack.push(command);
-        console.log('Added ModifyObjectCommand to undo stack, stack size:', this.undoStack.length);
         
         // 清除缓存的状态
         this.objectStates.delete(e.target);

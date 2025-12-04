@@ -6,6 +6,7 @@ import {
   DeleteOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
+import ShapeSelector from '../shape-selector';
 import './index.scss'
 // import { useSelector, useDispatch } from 'react-redux';
 // import type { RootState, AppDispatch } from '@/store';
@@ -26,29 +27,172 @@ const Toolbar = () => {
   ];
   const [brush, setBrush] = useState<fabric.PencilBrush>();
   const [toolbarType, setToolbarType] = useState('');
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [startPoint, setStartPoint] = useState<{x: number, y: number} | null>(null);
+  const [currentShape, setCurrentShape] = useState<fabric.Object | null>(null);
   const {canvas, undoRedoManager} = useContext(CanvasContext);
   useEffect(() => {
     if (!canvas) return;
     const brushInstance = configureBrush(canvas);
     setBrush(brushInstance as fabric.PencilBrush);
-  }, [canvas])
+
+    // 添加鼠标事件监听器
+    const handleMouseDown = (e: any) => {
+      if (!canvas || !e.pointer || (toolbarType !== 'circle' && toolbarType !== 'rectangle' && toolbarType !== 'triangle')) {
+        return;
+      }
+      
+      setIsDrawing(true);
+      const pointer = e.pointer;
+      setStartPoint({ x: pointer.x, y: pointer.y });
+      
+      // 创建初始形状
+      let shape: fabric.Object | null = null;
+      
+      if (toolbarType === 'circle') {
+        shape = new fabric.Circle({
+          left: pointer.x,
+          top: pointer.y,
+          radius: 1,
+          fill: 'transparent',
+          stroke: 'red',
+          strokeWidth: 2,
+          selectable: false,
+          evented: false,
+        });
+      } else if (toolbarType === 'rectangle') {
+        shape = new fabric.Rect({
+          left: pointer.x,
+          top: pointer.y,
+          width: 1,
+          height: 1,
+          fill: 'transparent',
+          stroke: 'green',
+          strokeWidth: 2,
+          selectable: false,
+          evented: false,
+        });
+      } else if (toolbarType === 'triangle') {
+        shape = new fabric.Triangle({
+          left: pointer.x,
+          top: pointer.y,
+          width: 1,
+          height: 1,
+          fill: 'transparent',
+          stroke: 'blue',
+          strokeWidth: 2,
+          selectable: false,
+          evented: false,
+        });
+      }
+      
+      if (shape) {
+        setCurrentShape(shape);
+        canvas.add(shape);
+        canvas.renderAll();
+      }
+    };
+
+    const handleMouseMove = (e: any) => {
+      if (!isDrawing || !startPoint || !currentShape || !canvas || !e.pointer) {
+        return;
+      }
+      
+      const currentX = e.pointer.x;
+      const currentY = e.pointer.y;
+      
+      if (toolbarType === 'circle' && currentShape instanceof fabric.Circle) {
+        // 计算半径（基于起点到当前点的距离）
+        const radius = Math.sqrt(
+          Math.pow(currentX - startPoint.x, 2) + Math.pow(currentY - startPoint.y, 2)
+        ) / 2;
+        
+        // 更新圆形位置和半径
+        currentShape.set({
+          left: startPoint.x - radius,
+          top: startPoint.y - radius,
+          radius: Math.max(radius, 1),
+        });
+      } else if (toolbarType === 'rectangle' && currentShape instanceof fabric.Rect) {
+        // 计算矩形边界
+        const width = Math.abs(currentX - startPoint.x);
+        const height = Math.abs(currentY - startPoint.y);
+        const left = Math.min(startPoint.x, currentX);
+        const top = Math.min(startPoint.y, currentY);
+        
+        currentShape.set({
+          left: left,
+          top: top,
+          width: Math.max(width, 1),
+          height: Math.max(height, 1),
+        });
+      } else if (toolbarType === 'triangle' && currentShape instanceof fabric.Triangle) {
+        // 计算三角形边界
+        const width = Math.abs(currentX - startPoint.x);
+        const height = Math.abs(currentY - startPoint.y);
+        const left = Math.min(startPoint.x, currentX);
+        const top = Math.min(startPoint.y, currentY);
+        
+        currentShape.set({
+          left: left,
+          top: top,
+          width: Math.max(width, 1),
+          height: Math.max(height, 1),
+        });
+      }
+      
+      canvas.renderAll();
+    };
+
+    const handleMouseUp = () => {
+      if (!isDrawing || !currentShape || !canvas) {
+        return;
+      }
+      
+      // 完成绘制，启用选择功能
+      currentShape.set({
+        selectable: true,
+        evented: true,
+      });
+      
+      canvas.setActiveObject(currentShape);
+      canvas.renderAll();
+      
+      // 重置绘制状态并退出绘制模式
+      setIsDrawing(false);
+      setStartPoint(null);
+      setCurrentShape(null);
+      setToolbarType(''); // 重置工具类型到默认状态
+    };
+
+    canvas.on('mouse:down', handleMouseDown);
+    canvas.on('mouse:move', handleMouseMove);
+    canvas.on('mouse:up', handleMouseUp);
+
+    return () => {
+      canvas.off('mouse:down', handleMouseDown);
+      canvas.off('mouse:move', handleMouseMove);
+      canvas.off('mouse:up', handleMouseUp);
+    };
+  }, [canvas, toolbarType, isDrawing, startPoint, currentShape])
 
   const handleClick = (action: string) => {
     if (!canvas) return;
     const item = toolbarItems.find((item) => item.action === action);
     if (!item) return;
-    setToolbarType('');
+    
     if (item.action === 'brush') {
       const isopen = toolbarType === 'brush';
       if (isopen) {
         canvas.isDrawingMode = false;
+        setToolbarType('');
       } else {
         canvas.isDrawingMode = true;
+        setToolbarType('brush');
       }
-      setToolbarType(isopen ? '' : 'brush');
     } else if (item.action === 'text') {
-      // const isopen = toolbarType === 'text';
       canvas.isDrawingMode = false;
+      setToolbarType('');
       const text = new fabric.IText('双击编辑文字', {
         left: 100, // 初始x坐标
         top: 100,  // 初始y坐标
@@ -91,6 +235,19 @@ const Toolbar = () => {
     }
   }
 
+  const handleShapeSelect = (shape: 'circle' | 'rectangle' | 'triangle') => {
+    if (!canvas) return;
+    
+    // 切换形状绘制模式
+    canvas.isDrawingMode = false;
+    const isopen = toolbarType === shape;
+    if (isopen) {
+      setToolbarType('');
+    } else {
+      setToolbarType(shape);
+    }
+  }
+
   return (
     <div className='toolbar-container'>
       {
@@ -103,6 +260,12 @@ const Toolbar = () => {
           </div>
         ))
       }
+      
+      {/* 添加图形选择器 */}
+      <ShapeSelector 
+        onSelect={handleShapeSelect}
+        isActive={toolbarType === 'circle' || toolbarType === 'rectangle' || toolbarType === 'triangle'}
+      />
     </div>
   );
 };

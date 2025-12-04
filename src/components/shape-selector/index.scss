@@ -1,0 +1,189 @@
+.shape-selector {
+  position: relative;
+  display: inline-block;
+
+  .shape-main-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 61px;
+    height: auto;
+    border-radius: 8px;
+    text-align: center;
+    padding: 8px 0px;
+    margin: auto;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .toolbar-icon {
+      font-size: 21px;
+      color: black;
+      margin-bottom: 5px;
+      transition: color 0.2s ease;
+    }
+
+    .toolbar-icon-label {
+      font-size: 12px;
+      color: black;
+      margin-top: 5px;
+      transition: color 0.2s ease;
+    }
+
+    &:hover {
+      background-color: rgba(237, 242, 247, 1);
+    }
+
+    &.active {
+      background-color: black;
+      
+      .toolbar-icon {
+        color: white;
+      }
+      
+      .toolbar-icon-label {
+        color: white;
+      }
+      
+      &:hover {
+        background-color: black;
+      }
+    }
+  }
+}
+
+// Portal弹窗样式（全局样式，因为Portal元素在body中）
+.shape-dropdown-portal {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  // 添加一个透明的连接区域，消除间隙
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 100px;
+    background: transparent;
+    z-index: 999;
+  }
+  .shape-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 2px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 10px;
+    margin: 6px;
+    min-width: 70px;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f5ff 100%);
+    border: 1px solid #000;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 0;
+    }
+    
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      // box-shadow: 0 8px 25px rgba(24, 144, 255, 0.25);
+      box-shadow: 0 8px 25px rgba(255, 127, 80, 0.25);
+      border-color: #000;
+      
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    .shape-option-icon {
+      font-size: 22px;
+      margin-bottom: 8px;
+      color: #000;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .shape-option-label {
+      font-size: 12px;
+      color: #666;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-align: center;
+      width: 45px;
+      position: relative;
+      z-index: 1;
+    }
+
+    &:hover .shape-option-icon {
+      color: #000;
+      transform: scale(1.1);
+    }
+
+    &:hover .shape-option-label {
+      color: #000;
+      font-weight: 700;
+    }
+  }
+}
+
+.shape-dropdown-portal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.shape-dropdown-content {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  padding: 8px;
+  position: relative;
+  backdrop-filter: blur(10px);
+
+  // 添加指向工具栏的箭头
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    // border-right: 8px solid #e8e8e8;
+    margin-right: -1px;
+    z-index: 1001;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid white;
+    margin-right: 0px;
+    z-index: 1001;
+  }
+}
