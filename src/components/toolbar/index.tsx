@@ -14,7 +14,7 @@ import { useContext, useEffect, useState } from 'react';
 import { CanvasContext } from '@/utils/contexts';
 import { configureBrush } from '@/utils/hooks/toolbar';
 import * as fabric from 'fabric';
-import { exportPNG, exportSVG } from '@/utils/services/export';
+import { exportPNG } from '@/utils/services/export';
 
 const Toolbar = () => {
   const toolbarItems = [
@@ -26,6 +26,7 @@ const Toolbar = () => {
     { icon: DownloadOutlined, label: '导出', action: 'export' },
   ];
   const [brush, setBrush] = useState<fabric.PencilBrush>();
+  void brush;
   const [toolbarType, setToolbarType] = useState('');
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState<{x: number, y: number} | null>(null);

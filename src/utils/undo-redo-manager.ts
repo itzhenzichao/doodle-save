@@ -96,34 +96,34 @@ class ModifyObjectCommand implements Command {
     this.canvas.renderAll();
   }
 
-  private _captureState(object: fabric.Object): any {
-    const state: any = {
-      left: object.left,
-      top: object.top,
-      scaleX: object.scaleX,
-      scaleY: object.scaleY,
-      angle: object.angle,
-      fill: object.fill,
-      stroke: object.stroke,
-      strokeWidth: object.strokeWidth,
-    };
+  // private _captureState(object: fabric.Object): any {
+  //   const state: any = {
+  //     left: object.left,
+  //     top: object.top,
+  //     scaleX: object.scaleX,
+  //     scaleY: object.scaleY,
+  //     angle: object.angle,
+  //     fill: object.fill,
+  //     stroke: object.stroke,
+  //     strokeWidth: object.strokeWidth,
+  //   };
     
-    // 对于文字对象，额外保存文字相关属性
-    if (object.type === 'i-text' || object.type === 'text') {
-      const textObject = object as any;
-      state.text = textObject.text;
-      state.fontSize = textObject.fontSize;
-      state.fontFamily = textObject.fontFamily;
-      state.fontWeight = textObject.fontWeight;
-      state.fontStyle = textObject.fontStyle;
-      state.textAlign = textObject.textAlign;
-      state.textBackgroundColor = textObject.textBackgroundColor;
-      state.charSpacing = textObject.charSpacing;
-      state.lineHeight = textObject.lineHeight;
-    }
+  //   // 对于文字对象，额外保存文字相关属性
+  //   if (object.type === 'i-text' || object.type === 'text') {
+  //     const textObject = object as any;
+  //     state.text = textObject.text;
+  //     state.fontSize = textObject.fontSize;
+  //     state.fontFamily = textObject.fontFamily;
+  //     state.fontWeight = textObject.fontWeight;
+  //     state.fontStyle = textObject.fontStyle;
+  //     state.textAlign = textObject.textAlign;
+  //     state.textBackgroundColor = textObject.textBackgroundColor;
+  //     state.charSpacing = textObject.charSpacing;
+  //     state.lineHeight = textObject.lineHeight;
+  //   }
     
-    return state;
-  }
+  //   return state;
+  // }
 
   private _applyState(object: fabric.Object, state: any): void {
     Object.keys(state).forEach(key => {
