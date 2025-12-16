@@ -5,6 +5,7 @@ import {
   RedoOutlined,
   DeleteOutlined,
   DownloadOutlined,
+  BlockOutlined,
 } from '@ant-design/icons';
 import ShapeSelector from '../shape-selector';
 import './index.scss'
@@ -20,6 +21,7 @@ const Toolbar = () => {
   const toolbarItems = [
     { icon: HighlightOutlined, label: '画笔', action: 'brush' },
     { icon: EditOutlined, label: '添加文字', action: 'text' },
+    { icon: BlockOutlined, label: '图形', action: 'shapes' },
     { icon: UndoOutlined, label: '撤销', action: 'undo' },
     { icon: RedoOutlined, label: '重做', action: 'redo' },
     { icon: DeleteOutlined, label: '清除画布', action: 'clear' },
@@ -207,6 +209,9 @@ const Toolbar = () => {
       canvas.add(text);
       canvas.setActiveObject(text); // 选中新增的文字
       canvas.renderAll();
+    } else if (item.action === 'shapes') {
+      // 图形工具的点击处理将由 ShapeSelector 组件内部处理
+      // 这里不做任何操作，保持工具状态由 ShapeSelector 管理
     } else if (item.action === 'undo') {
       if (undoRedoManager) {
         undoRedoManager.performUndo();
@@ -253,20 +258,24 @@ const Toolbar = () => {
     <div className='toolbar-container'>
       {
         toolbarItems.map((item) => (
-          <div className={`toolbar-icon-container ${toolbarType === item.action ? 'active' : ''}` } 
-          onClick={() => handleClick(item.action)}  key={item.label}>
-            { /* 直接使用 antd 内置图标组件，避免通过 Icon.component 造成类型不匹配 */ }
-            <item.icon className='toolbar-icon' />
-            <div className='toolbar-icon-label'>{item.label}</div>
-          </div>
+          item.action === 'shapes' ? (
+            <div key={item.label}>
+              {/* 图形选择器 */}
+              <ShapeSelector 
+                onSelect={handleShapeSelect}
+                isActive={toolbarType === 'circle' || toolbarType === 'rectangle' || toolbarType === 'triangle'}
+              />
+            </div>
+          ) : (
+            <div className={`toolbar-icon-container ${toolbarType === item.action ? 'active' : ''}` } 
+            onClick={() => handleClick(item.action)}  key={item.label}>
+              { /* 直接使用 antd 内置图标组件，避免通过 Icon.component 造成类型不匹配 */ }
+              <item.icon className='toolbar-icon' />
+              <div className='toolbar-icon-label'>{item.label}</div>
+            </div>
+          )
         ))
       }
-      
-      {/* 添加图形选择器 */}
-      <ShapeSelector 
-        onSelect={handleShapeSelect}
-        isActive={toolbarType === 'circle' || toolbarType === 'rectangle' || toolbarType === 'triangle'}
-      />
     </div>
   );
 };
