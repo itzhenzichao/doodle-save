@@ -8,24 +8,30 @@
 
 本项目是一个轻量级在线绘画工具，支持基础图形绘制（线条、矩形、圆形等）、颜色调整、画布操作等功能。通过 React 组件化开发和 Redux 状态管理，确保绘图状态的一致性和可维护性，Vite 则提供了极速的热更新和构建性能。
 
+## 🎨  项目地址
+<!-- http://101.43.240.203/?width=400&height=400 -->
+<!-- 项目地址是：http://101.43.240.203/?width=400&height=400 -->
+👉  [涂鸭](http://101.43.240.203/?width=400&height=400 "绘画地址")
+💬 小tips：项目地址拼接width和height可以快速创建画布，例如：http://xx.xx.xx.xx/?width=400&height=400
+
+
 
 ## ✨ 核心功能
 
-- 支持多种绘图工具：铅笔、直线、矩形、圆形、文本等
-- 自定义画笔颜色、线条粗细、填充色
-- 画布缩放、平移、清空操作
+- 支持多种绘图工具：画笔、文本、图形等
+- 画布缩放、清空操作
 - 绘图历史记录（撤销/重做）
 - 响应式设计，适配不同设备尺寸
 
 
 ## 🛠️ 技术栈
 
-- **前端框架**：React 19
+- **前端框架**：React 18
 - **状态管理**：@reduxjs/toolkit + react-redux
 - **绘图核心**：fabric.js（Canvas 绘图库）
 - **构建工具**：Vite（快速开发与打包）
 - **包管理**：Yarn
-- **语言**：JavaScript（可扩展为 TypeScript）
+- **语言**：TypeScript
 
 
 ## 🚀 快速开始
@@ -74,64 +80,12 @@ yarn run preview
 src/
 ├── assets/           # 静态资源（图片、样式等）
 ├── components/       # React 组件
-│   ├── Canvas/       # 画布核心组件（集成 fabric.js）
 │   ├── Toolbar/      # 工具栏组件（选择工具、调整属性）
 │   └── ...
 ├── store/            # Redux 状态管理
-│   ├── slices/       # Redux Toolkit 切片（如 canvasSlice.js）
+│   ├── slices/       # Redux Toolkit 切片（如 canvas.js）
 │   └── index.js      # 配置 store
 ├── utils/            # 工具函数（如绘图辅助管理）
 ├── App.jsx           # 根组件
 └── main.jsx          # 入口文件
 ```
-
-
-<!-- ## 📝 使用说明
-
-1. **工具栏操作**：
-   - 选择左侧工具按钮切换绘图工具（铅笔/矩形/圆形等）
-   - 右侧面板调整颜色、线条粗细等属性
-
-2. **画布操作**：
-   - 鼠标拖动：移动画布
-   - 滚轮缩放：放大/缩小画布
-   - 点击「清空」按钮重置画布
-   - 使用「撤销」「重做」按钮管理绘图历史
- -->
-
-<!-- ## 🔧 常见问题
-
-1. **依赖安装失败**：
-   - 检查 Node.js 和 Yarn 版本是否符合要求
-   - 尝试删除 `node_modules` 和 `yarn.lock` 后重新安装：
-     ```bash
-     rm -rf node_modules yarn.lock
-     yarn install
-     ```
-
-2. **热更新后画布状态丢失**：
-   - 这是 Vite 热更新的正常现象，可通过 `useEffect` 监听组件更新事件，手动恢复画布状态
-
-3. **fabric.js 相关报错**：
-   - 确保已正确安装 fabric：`yarn add fabric`
-   - 若打包后报错，可在 `vite.config.js` 中添加优化配置：
-     ```javascript
-     // vite.config.js
-     export default defineConfig({
-       optimizeDeps: {
-         include: ['fabric']
-       }
-     })
-     ``` -->
-<!-- import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '@/store';
-import { init } from '@/store/slices/canvas';
-    const dispatch = useDispatch<AppDispatch>();
-    dispatch(init(null)); -->
-<!-- 
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, AppDispatch } from '@/store';
-
-
-
-
