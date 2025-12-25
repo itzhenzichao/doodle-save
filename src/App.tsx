@@ -34,9 +34,7 @@ function App () {
     height,
     backgroundColor: '#ffffff'
   })
-  const a = 123;
-  let b = a + 1;
-  console.log(b)
+
   const onFinish: FormProps<FieldType>['onFinish'] = values => {
     const { width, height } = values
     if (width <= 0 || height <= 0) {
@@ -139,7 +137,7 @@ function App () {
             <Button onClick={()=>{
               form.submit()
             }} icon={<XHYIcon style={{ fontSize: 24 }} />} iconPosition={'end'}>
-              Search
+              开始绘画
             </Button>
           </div>
         </Form>
