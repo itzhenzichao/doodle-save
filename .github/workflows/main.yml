@@ -37,6 +37,7 @@ jobs:
           
           # 2. 重新安装依赖
           npm install
+          npm install -D terser
 
       - name: Build
         run: npm run build
