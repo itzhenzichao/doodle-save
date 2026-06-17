@@ -5,10 +5,11 @@ import * as fabric from 'fabric';
 // 定义状态类型
 interface CanvasState {
   instance: fabric.Canvas | null;
+  color: string;
 }
 
 // 初始状态
-const initialState: CanvasState = { instance: null };
+const initialState: CanvasState = { instance: null, color: '#f0a314' };
 
 // 创建 slice（自动生成 action 和 reducer）
 const canvasSlice = createSlice({

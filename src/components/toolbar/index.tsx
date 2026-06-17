@@ -16,9 +16,11 @@ import { CanvasContext } from '@/utils/contexts';
 import { configureBrush } from '@/utils/hooks/toolbar';
 import * as fabric from 'fabric';
 import { exportPNG } from '@/utils/services/export';
+import ColorSelector from '../color-selector';
 
 const Toolbar = () => {
   const toolbarItems = [
+    { icon: HighlightOutlined, label: '颜色选择', action: 'color' },
     { icon: HighlightOutlined, label: '画笔', action: 'brush' },
     { icon: EditOutlined, label: '添加文字', action: 'text' },
     { icon: BlockOutlined, label: '图形', action: 'shapes' },
@@ -254,18 +256,28 @@ const Toolbar = () => {
     }
   }
 
+  const renderComponent =(action: string, label: string)=>{
+    switch(action){
+      case'color':
+      return <div key={label}>
+        <ColorSelector></ColorSelector>
+      </div>
+    }
+      return (<div key={label}>
+        {/* 图形选择器 */}
+        <ShapeSelector 
+          onSelect={handleShapeSelect}
+          isActive={toolbarType === 'circle' || toolbarType === 'rectangle' || toolbarType === 'triangle'}
+        />
+      </div>)
+  }
+
   return (
     <div className='toolbar-container'>
       {
         toolbarItems.map((item) => (
-          item.action === 'shapes' ? (
-            <div key={item.label}>
-              {/* 图形选择器 */}
-              <ShapeSelector 
-                onSelect={handleShapeSelect}
-                isActive={toolbarType === 'circle' || toolbarType === 'rectangle' || toolbarType === 'triangle'}
-              />
-            </div>
+          ['shapes', 'color'].includes( item.action) ? (
+            renderComponent(item.action, item.label)
           ) : (
             <div className={`toolbar-icon-container ${toolbarType === item.action ? 'active' : ''}` } 
             onClick={() => handleClick(item.action)}  key={item.label}>
