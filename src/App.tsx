@@ -1,6 +1,6 @@
-import { Layout, Modal, Form, InputNumber, Button, message } from 'antd'
+import { Layout, Modal, Form, InputNumber, Button, message, ColorPicker } from 'antd'
 import Icon from '@ant-design/icons';
-import type { FormProps, GetProps } from 'antd'
+import type { FormProps, GetProps, ColorPickerProps, GetProp } from 'antd'
 const { Header, Sider, Content } = Layout
 import { layoutStyle } from './Layout.style'
 import './App.scss'
@@ -12,10 +12,13 @@ import { CanvasContext } from '@/utils/contexts'
 import { useState, useEffect } from 'react'
 import { XHYSvg } from '@/utils/icon/svg'
 import { useSearchParams } from 'react-router-dom'
+import { useColorHex } from '@/utils/hooks/useColorHex';
+type Color = GetProp<ColorPickerProps, 'value'>;
 
 type FieldType = {
   width: number
   height: number
+  backgroundColor: string
 }
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -25,14 +28,15 @@ function App () {
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
   const [searchParams] = useSearchParams();
-
+  const [backgroundColor, setBackgroundColor] = useState<Color>('#ffffff');
+  const backgroundColorHexString = useColorHex(backgroundColor);
   const XHYIcon = (props: Partial<CustomIconComponentProps>) => (
     <Icon component={XHYSvg} {...props} />
   );
   const {canvas, undoRedoManager} = useFabricCanvas('canvas', {
     width,
     height,
-    backgroundColor: '#ffffff'
+    backgroundColor: backgroundColorHexString
   })
 
   const onFinish: FormProps<FieldType>['onFinish'] = values => {
@@ -133,6 +137,16 @@ function App () {
             <InputNumber min={0} max={9999}  />
           </Form.Item>
 
+          <Form.Item<FieldType>
+            label='背景色'
+            name='backgroundColor'
+          >
+            <ColorPicker
+              placement="rightTop"
+              format="hex"
+              value={backgroundColor} 
+              onChangeComplete={setBackgroundColor} />
+          </Form.Item>
           <div className='set-canvas-size-button'>
             <Button onClick={()=>{
               form.submit()
