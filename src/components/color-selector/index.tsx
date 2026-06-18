@@ -1,3 +1,4 @@
+import { AggregationColor } from 'antd/es/color-picker/color';
 import { ColorPicker } from 'antd';
 import { useEffect, useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
@@ -6,7 +7,7 @@ import type { ColorPickerProps, GetProp } from 'antd';
 type Color = GetProp<ColorPickerProps, 'value'>;
 
 interface ColorSelectorProps {
-    handleColorSelect: Function
+    handleColorSelect: (open: boolean) => void
 }
 
 const ColorSelector = (props: ColorSelectorProps)=>{
@@ -14,7 +15,7 @@ const ColorSelector = (props: ColorSelectorProps)=>{
     const [color, setLocalColor] = useState<Color>('#ffc116');
     const dispatch = useDispatch();
     const hexString = useMemo<string>(
-        () => (typeof color === 'string' ? color : color?.toHexString()),
+        () => (typeof color === 'string' ? color : color instanceof AggregationColor ? color.toHexString() : '#ffc116'),
         [color],
     );
 
