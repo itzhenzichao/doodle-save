@@ -9,7 +9,7 @@ interface CanvasState {
 }
 
 // 初始状态
-const initialState: CanvasState = { instance: null, color: '#f0a314' };
+const initialState: CanvasState = { instance: null, color: '' };
 
 // 创建 slice（自动生成 action 和 reducer）
 const canvasSlice = createSlice({
@@ -20,11 +20,14 @@ const canvasSlice = createSlice({
       console.log('init', action.payload);
       state.instance = action.payload as any;
     },
+    setColor: (state, action: PayloadAction<string>) => {
+      state.color = action.payload;
+    }
   },
 });
 
 // 导出 action（自动推断类型）
-export const { init } = canvasSlice.actions;
+export const { init, setColor } = canvasSlice.actions;
 
 // 导出 reducer
 export default canvasSlice.reducer;

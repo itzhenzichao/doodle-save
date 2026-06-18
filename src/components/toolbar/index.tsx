@@ -17,6 +17,9 @@ import { configureBrush } from '@/utils/hooks/toolbar';
 import * as fabric from 'fabric';
 import { exportPNG } from '@/utils/services/export';
 import ColorSelector from '../color-selector';
+import { useSelector } from 'react-redux';
+import type { RootState } from '@/store';
+
 
 const Toolbar = () => {
   const toolbarItems = [
@@ -36,10 +39,15 @@ const Toolbar = () => {
   const [startPoint, setStartPoint] = useState<{x: number, y: number} | null>(null);
   const [currentShape, setCurrentShape] = useState<fabric.Object | null>(null);
   const {canvas, undoRedoManager} = useContext(CanvasContext);
+
+  const useAppSelector = useSelector((state: RootState) => state.canvas.color)
   useEffect(() => {
     if (!canvas) return;
-    const brushInstance = configureBrush(canvas);
+    const brushInstance = configureBrush(canvas, useAppSelector);
     setBrush(brushInstance as fabric.PencilBrush);
+
+    canvas.isDrawingMode = toolbarType === 'brush';
+
 
     // 添加鼠标事件监听器
     const handleMouseDown = (e: any) => {
@@ -60,7 +68,7 @@ const Toolbar = () => {
           top: pointer.y,
           radius: 1,
           fill: 'transparent',
-          stroke: 'red',
+          stroke: useAppSelector,
           strokeWidth: 2,
           selectable: false,
           evented: false,
@@ -72,7 +80,7 @@ const Toolbar = () => {
           width: 1,
           height: 1,
           fill: 'transparent',
-          stroke: 'green',
+          stroke: useAppSelector,
           strokeWidth: 2,
           selectable: false,
           evented: false,
@@ -84,7 +92,7 @@ const Toolbar = () => {
           width: 1,
           height: 1,
           fill: 'transparent',
-          stroke: 'blue',
+          stroke: useAppSelector,
           strokeWidth: 2,
           selectable: false,
           evented: false,
@@ -189,20 +197,17 @@ const Toolbar = () => {
     if (item.action === 'brush') {
       const isopen = toolbarType === 'brush';
       if (isopen) {
-        canvas.isDrawingMode = false;
         setToolbarType('');
       } else {
-        canvas.isDrawingMode = true;
         setToolbarType('brush');
       }
     } else if (item.action === 'text') {
-      canvas.isDrawingMode = false;
       setToolbarType('');
       const text = new fabric.IText('双击编辑文字', {
         left: 100, // 初始x坐标
         top: 100,  // 初始y坐标
         fontSize: 24, // 字体大小
-        fill: 'blue', // 文字颜色
+        fill: useAppSelector, // 文字颜色
         fontWeight: 'normal', // 字体粗细（normal/bold）
         fontFamily: 'Arial, sans-serif', // 字体
         editable: true, // 允许编辑
@@ -247,7 +252,6 @@ const Toolbar = () => {
     if (!canvas) return;
     
     // 切换形状绘制模式
-    canvas.isDrawingMode = false;
     const isopen = toolbarType === shape;
     if (isopen) {
       setToolbarType('');
@@ -256,11 +260,20 @@ const Toolbar = () => {
     }
   }
 
+  const handleColorSelect =(isopen: boolean) => {
+    if (!canvas) return;
+    if (isopen) {
+      setToolbarType('color');
+    }
+  }
+
   const renderComponent =(action: string, label: string)=>{
     switch(action){
       case'color':
       return <div key={label}>
-        <ColorSelector></ColorSelector>
+        <ColorSelector
+        handleColorSelect={handleColorSelect}
+        ></ColorSelector>
       </div>
     }
       return (<div key={label}>
